@@ -34,6 +34,9 @@
 #include "bsp_can.h"
 #include "remote_control.h"
 #include "bsp_rc.h"
+#include "calibrate_task.h"
+#include "bsp_imu_pwm.h"
+#include "message_usart.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -109,12 +112,14 @@ int main(void)
   MX_TIM4_Init();
   /* USER CODE BEGIN 2 */
 	//开启TIM5时钟
+	HAL_TIM_Base_Start(&htim4);
 	HAL_TIM_Base_Start(&htim5);
 	//初始化rc遥控器
 	remote_control_init();
 	//使能can过滤器
 	can_filter_init();
 	//开启PWM
+	HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_3);
 	HAL_TIM_PWM_Start(&htim5, TIM_CHANNEL_1);
 	HAL_TIM_PWM_Start(&htim5, TIM_CHANNEL_2);
 	HAL_TIM_PWM_Start(&htim5, TIM_CHANNEL_3);
@@ -122,6 +127,8 @@ int main(void)
 	__HAL_UART_ENABLE_IT(&huart1, UART_IT_IDLE);
 	/*启动串口DMA接收*/
 	HAL_UART_Receive_DMA(&huart1,rx_buffer,BUFFER_SIZE);
+	//开启校准模式
+	cali_param_init();
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in freertos.c) */

@@ -31,6 +31,7 @@
 ".\standard_hero\chassis_behaviour.o"
 ".\standard_hero\calibrate_task.o"
 ".\standard_hero\detect_task.o"
+".\standard_hero\message_usart.o"
 ".\standard_hero\stm32f4xx_hal_can.o"
 ".\standard_hero\stm32f4xx_hal_rcc.o"
 ".\standard_hero\stm32f4xx_hal_rcc_ex.o"

@@ -55,6 +55,7 @@
 #include "struct_typedef.h"
 
 
+
 #define DETECT_TASK_INIT_TIME 57
 #define DETECT_CONTROL_TIME 10
 
@@ -121,7 +122,7 @@ extern void detect_task(void const *pvParameters);
   * @param[in]      toe:设备目录
   * @retval         true(错误) 或者false(没错误)
   */
-extern bool_t toe_is_error(uint8_t err);
+extern bool_t toe_is_error(uint8_t toe);
 
 /**
   * @brief          record the time

@@ -21,6 +21,7 @@
 
 #include "main.h"
 
+#include "detect_task.h"
 
 extern UART_HandleTypeDef huart3;
 extern DMA_HandleTypeDef hdma_usart3_rx;
@@ -38,6 +39,7 @@ extern DMA_HandleTypeDef hdma_usart3_rx;
   * @retval         none
   */
 static void sbus_to_rc(volatile const uint8_t *sbus_buf, RC_ctrl_t *rc_ctrl);
+static int16_t RC_abs(int16_t value);
 
 //remote control data 
 //遥控器控制变量
@@ -74,6 +76,62 @@ void remote_control_init(void)
 const RC_ctrl_t *get_remote_control_point(void)
 {
     return &rc_ctrl;
+}
+
+//判断遥控器数据是否出错，
+uint8_t RC_data_is_error(void)
+{
+    //使用了go to语句 方便出错统一处理遥控器变量数据归零
+    if (RC_abs(rc_ctrl.rc.ch[0]) > RC_CHANNAL_ERROR_VALUE)
+    {
+        goto error;
+    }
+    if (RC_abs(rc_ctrl.rc.ch[1]) > RC_CHANNAL_ERROR_VALUE)
+    {
+        goto error;
+    }
+    if (RC_abs(rc_ctrl.rc.ch[2]) > RC_CHANNAL_ERROR_VALUE)
+    {
+        goto error;
+    }
+    if (RC_abs(rc_ctrl.rc.ch[3]) > RC_CHANNAL_ERROR_VALUE)
+    {
+        goto error;
+    }
+    if (rc_ctrl.rc.s[0] == 0)
+    {
+        goto error;
+    }
+    if (rc_ctrl.rc.s[1] == 0)
+    {
+        goto error;
+    }
+    return 0;
+
+error:
+    rc_ctrl.rc.ch[0] = 0;
+    rc_ctrl.rc.ch[1] = 0;
+    rc_ctrl.rc.ch[2] = 0;
+    rc_ctrl.rc.ch[3] = 0;
+    rc_ctrl.rc.ch[4] = 0;
+    rc_ctrl.rc.s[0] = RC_SW_DOWN;
+    rc_ctrl.rc.s[1] = RC_SW_DOWN;
+    rc_ctrl.mouse.x = 0;
+    rc_ctrl.mouse.y = 0;
+    rc_ctrl.mouse.z = 0;
+    rc_ctrl.mouse.press_l = 0;
+    rc_ctrl.mouse.press_r = 0;
+    rc_ctrl.key.v = 0;
+    return 1;
+}
+
+void slove_RC_lost(void)
+{
+    RC_restart(SBUS_RX_BUF_NUM);
+}
+void slove_data_error(void)
+{
+    RC_restart(SBUS_RX_BUF_NUM);
 }
 
 
@@ -117,6 +175,8 @@ void USART3_IRQHandler(void)
             if(this_time_rx_len == RC_FRAME_LENGTH)
             {
                 sbus_to_rc(sbus_rx_buf[0], &rc_ctrl);
+							  //记录数据接收时间
+                detect_hook(DBUS_TOE);
             }
         }
         else
@@ -146,8 +206,23 @@ void USART3_IRQHandler(void)
             {
                 //处理遥控器数据
                 sbus_to_rc(sbus_rx_buf[1], &rc_ctrl);
+							  //记录数据接收时间
+                detect_hook(DBUS_TOE);
             }
         }
+    }
+}
+
+//取正函数
+static int16_t RC_abs(int16_t value)
+{
+    if (value > 0)
+    {
+        return value;
+    }
+    else
+    {
+        return -value;
     }
 }
 

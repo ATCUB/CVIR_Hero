@@ -51,6 +51,7 @@
   */
   
 #include "detect_task.h"
+#include "main.h"
 #include "cmsis_os.h"
 
 
@@ -170,7 +171,6 @@ void detect_task(void const *pvParameters)
                 }
             }
         }
-
         vTaskDelay(DETECT_CONTROL_TIME);
 #if INCLUDE_uxTaskGetStackHighWaterMark
         detect_task_stack = uxTaskGetStackHighWaterMark(NULL);

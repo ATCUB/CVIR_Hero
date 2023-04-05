@@ -31,6 +31,7 @@
 #include "calibrate_task.h"
 #include "chassis_task.h"
 #include "detect_task.h"
+#include "message_usart.h"
 
 /* USER CODE END Includes */
 
@@ -42,6 +43,7 @@ osThreadId imuTaskHandle;
 osThreadId chassisTaskHandle;
 osThreadId detect_handle;
 osThreadId calibrate_tast_handle;
+osThreadId message_handle;
 
 /* USER CODE END PTD */
 
@@ -133,6 +135,9 @@ void MX_FREERTOS_Init(void) {
 	
 	osThreadDef(DETECT, detect_task, osPriorityNormal, 0, 256);
   detect_handle = osThreadCreate(osThread(DETECT), NULL);
+	
+	osThreadDef(MESSAGE, msg_send_task, osPriorityNormal, 0, 256);
+  message_handle = osThreadCreate(osThread(MESSAGE), NULL);
   /* USER CODE END RTOS_THREADS */
 
 }

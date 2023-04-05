@@ -18,6 +18,7 @@
   */
 
 #include "CAN_receive.h"
+#include "detect_task.h"
 #include "main.h"
 
 int16_t user_speed[5]={0};
@@ -76,8 +77,7 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
             //get motor id
             i = rx_header.StdId - CAN_3508_M1_ID;
             get_motor_measure(&motor_chassis[i], rx_data);
-						user_speed[i] = motor_chassis[i].speed_rpm;
-						user_speed[i] = motor_chassis[i].ecd;
+						detect_hook(CHASSIS_MOTOR1_TOE + i);
             break;
         }
 

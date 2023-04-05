@@ -1,15 +1,8 @@
 #include "bsp_usart.h"
 #include "usart.h"
-#include <stdarg.h>
-#include <stdio.h>
-#include "main.h"
+#include "message_usart.h"
 
 extern UART_HandleTypeDef huart1;
-uint8_t rx_buffer[100] = {0};//缓冲区
-uint8_t recv_end_flag = 0;  //完成接收标志位
-uint16_t rx_len = 0;  //接收数据长度
-uint8_t ch;
-uint8_t ch_r;
 
 /**
   * @brief This function handles USART1 global interrupt.
@@ -38,28 +31,4 @@ void USART1_IRQHandler(void)
 		recv_end_flag = 1;
 	}
   /* USER CODE END USART1_IRQn 1 */
-}
-/*
-	printf函数重定向
-*/
-int fputc(int c, FILE * f)
-{
-	ch=c;
-	HAL_UART_Transmit(&huart1,&ch,1,1000);//发送串口
-	return c;
-}
-
-/**
-  * @brief usart1DMA接收并发送函数，注意将接收的rx_buffer主动清零.
-  */
-void uart1_tx_rx(void)
-{
-	if(recv_end_flag ==1)
-	{
-		HAL_UART_Transmit_DMA(&huart1,rx_buffer,rx_len);
-		rx_len=0;
-		recv_end_flag=0;
-		HAL_UART_Receive_DMA(&huart1,rx_buffer,BUFFER_SIZE);
-	}
-
 }

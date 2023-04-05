@@ -563,6 +563,11 @@
               <FileType>1</FileType>
               <FilePath>..\application\detect_task.c</FilePath>
             </File>
+            <File>
+              <FileName>message_usart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\application\message_usart.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

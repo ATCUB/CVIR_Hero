@@ -20,12 +20,14 @@
 #include "chassis_behaviour.h"
 #include "cmsis_os.h"
 #include "main.h"
+#include "message_usart.h"
 #include "arm_math.h"
 #include "pid.h"
 #include "remote_control.h"
 #include "CAN_receive.h"
 #include "detect_task.h"
 #include "INS_task.h"
+#include <stdio.h>
 
 extern uint8_t rx_buffer[];
 
@@ -182,7 +184,6 @@ void chassis_task(void const *pvParameters)
                 //发送控制电流
                 CAN_cmd_chassis(chassis_move.motor_chassis[0].give_current, chassis_move.motor_chassis[1].give_current,
                                 chassis_move.motor_chassis[2].give_current, chassis_move.motor_chassis[3].give_current);
-
             }
 						
 //						else if(chassis_move.chassis_RC->rc.s[1] == 2)
