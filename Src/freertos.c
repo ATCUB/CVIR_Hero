@@ -121,8 +121,8 @@ void MX_FREERTOS_Init(void) {
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
-//	osThreadDef(gimbalTask, gimbal_task, osPriorityHigh, 0, 512);
-//  gimbalTaskHandle = osThreadCreate(osThread(gimbalTask), NULL);
+	osThreadDef(gimbalTask, gimbal_task, osPriorityHigh, 0, 512);
+  gimbalTaskHandle = osThreadCreate(osThread(gimbalTask), NULL);
 
   osThreadDef(cali, calibrate_task, osPriorityNormal, 0, 512);
   calibrate_tast_handle = osThreadCreate(osThread(cali), NULL);

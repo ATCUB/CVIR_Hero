@@ -63,16 +63,43 @@ void UART_printf(void)
 }
 
 /**
+  * @brief usart1DMA接收函数，注意将接收的rx_buffer主动清零.
+  */
+void UART_receive(void)
+{
+	if(recv_end_flag ==1)
+	{
+		rx_len=0;
+		recv_end_flag=0;
+		HAL_UART_Receive_DMA(&huart1,rx_buffer,BUFFER_SIZE);
+	}
+}
+
+/**
   * @brief message发送函数，发送设备上线信息.
   */
 void msg_send_task(void const *pvParameters)
 {
-	static uint8_t device_status[ERROR_LIST_LENGHT] = {0};
+	static uint8_t 	device_status[ERROR_LIST_LENGHT] = {0};
+	static uint8_t 	print_flag = 0;
 	static uint8_t  first_call = 1;
 	device_list = get_error_list_point_mgs();
 	
 	while(1)
 	{
+		UART_receive();
+		//解析指令
+		if( rx_buffer[0] == 'C' && rx_buffer[1] == 'K')  
+		{
+			//打印设备指令
+			print_flag = 1;
+			
+			//清空串口指令			
+			for(uint8_t i=0; i < BUFFER_SIZE; i++)
+				rx_buffer[i] = 0;
+		}
+		
+		//循环判断设备状态，如果状态变更或者收到CK指令则打印设备上线下线时间戳
 		for( uint8_t i=0; i < ERROR_LIST_LENGHT; i++ )
 		{
 			if( device_list[i].enable )
@@ -82,10 +109,11 @@ void msg_send_task(void const *pvParameters)
 				{
 					for( uint8_t i=0; i < ERROR_LIST_LENGHT; i++ )
 						device_status[i] = ( !device_list[i].is_lost );
+					
 					first_call = 0;
 				}
 				
-				if( device_list[i].is_lost != ( !device_status[i] ) )
+				if( device_list[i].is_lost != ( !device_status[i] ) || print_flag)
 				{
 					device_status[i] = ( !device_list[i].is_lost );
 					
@@ -107,6 +135,10 @@ void msg_send_task(void const *pvParameters)
 				
 			}
 		}
+		
+		//clear print flag，清除打印标志位
+		if(print_flag) print_flag = 0;
+		
 		vTaskDelay(MESSAGE_SEND_TIME);
 	}
 }

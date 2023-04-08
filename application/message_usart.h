@@ -32,6 +32,7 @@ extern uint16_t rx_len;
 
 
 extern void UART_printf(void);
+void UART_receive(void);
 extern void msg_send_task(void const *pvParameters);
 
 

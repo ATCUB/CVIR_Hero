@@ -1,25 +1,26 @@
 /**
-  ****************************(C) COPYRIGHT  ****************************
+  ****************************(C) COPYRIGHT 2019 DJI****************************
   * @file       chassis.c/h
   * @brief      chassis control task,
   *             底盘控制任务
   * @note       
   * @history
   *  Version    Date            Author          Modification
-  *  V1.0.0                   
-  *  V1.1.0                     
+  *  V1.0.0     Dec-26-2018     RM              1. 完成
+  *  V1.1.0     Nov-11-2019     RM              1. add chassis power control
   *
   @verbatim
   ==============================================================================
 
   ==============================================================================
   @endverbatim
-  ****************************(C) COPYRIGHT  ****************************
+  ****************************(C) COPYRIGHT 2019 DJI****************************
   */
 #ifndef CHASSIS_TASK_H
 #define CHASSIS_TASK_H
 #include "struct_typedef.h"
 #include "CAN_receive.h"
+#include "gimbal_task.h"
 #include "pid.h"
 #include "remote_control.h"
 #include "user_lib.h"
@@ -152,6 +153,8 @@ typedef struct
 typedef struct
 {
   const RC_ctrl_t *chassis_RC;               //底盘使用的遥控器指针, the point to remote control
+  const gimbal_motor_t *chassis_yaw_motor;   //will use the relative angle of yaw gimbal motor to calculate the euler angle.底盘使用到yaw云台电机的相对角度来计算底盘的欧拉角.
+  const gimbal_motor_t *chassis_pitch_motor; //will use the relative angle of pitch gimbal motor to calculate the euler angle.底盘使用到pitch云台电机的相对角度来计算底盘的欧拉角
   const fp32 *chassis_INS_angle;             //the point to the euler angle of gyro sensor.获取陀螺仪解算出的欧拉角指针
   chassis_mode_e chassis_mode;               //state machine. 底盘控制状态机
   chassis_mode_e last_chassis_mode;          //last state machine.底盘上次控制状态机

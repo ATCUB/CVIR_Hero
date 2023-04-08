@@ -1,0 +1,17 @@
+.\standard_hero\gimbal_behaviour.o: ..\application\gimbal_behaviour.c
+.\standard_hero\gimbal_behaviour.o: ..\application\gimbal_behaviour.h
+.\standard_hero\gimbal_behaviour.o: ..\application\struct_typedef.h
+.\standard_hero\gimbal_behaviour.o: ..\application\gimbal_task.h
+.\standard_hero\gimbal_behaviour.o: ..\application\CAN_receive.h
+.\standard_hero\gimbal_behaviour.o: ..\controller\pid.h
+.\standard_hero\gimbal_behaviour.o: ..\application\remote_control.h
+.\standard_hero\gimbal_behaviour.o: ..\bsp\boards\bsp_rc.h
+.\standard_hero\gimbal_behaviour.o: ..\components\user_lib.h
+.\standard_hero\gimbal_behaviour.o: ..\components\Include\arm_math.h
+.\standard_hero\gimbal_behaviour.o: ../Drivers/CMSIS/Include/core_cm4.h
+.\standard_hero\gimbal_behaviour.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\standard_hero\gimbal_behaviour.o: ../Drivers/CMSIS/Include/cmsis_version.h
+.\standard_hero\gimbal_behaviour.o: ../Drivers/CMSIS/Include/cmsis_compiler.h
+.\standard_hero\gimbal_behaviour.o: ../Drivers/CMSIS/Include/cmsis_armcc.h
+.\standard_hero\gimbal_behaviour.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+.\standard_hero\gimbal_behaviour.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h

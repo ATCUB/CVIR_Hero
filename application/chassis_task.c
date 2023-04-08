@@ -1,35 +1,33 @@
 /**
-  ****************************(C) COPYRIGHT  ****************************
+  ****************************(C) COPYRIGHT 2019 DJI****************************
   * @file       chassis.c/h
   * @brief      chassis control task,
   *             底盘控制任务
   * @note       
   * @history
   *  Version    Date            Author          Modification
-  *  V1.0.0     
-  *  V1.1.0     
+  *  V1.0.0     Dec-26-2018     RM              1. done
+  *  V1.1.0     Nov-11-2019     RM              1. add chassis power control
   *
   @verbatim
   ==============================================================================
 
   ==============================================================================
   @endverbatim
-  ****************************(C) COPYRIGHT ****************************
+  ****************************(C) COPYRIGHT 2019 DJI****************************
   */
 #include "chassis_task.h"
 #include "chassis_behaviour.h"
+
 #include "cmsis_os.h"
-#include "main.h"
-#include "message_usart.h"
+
 #include "arm_math.h"
 #include "pid.h"
 #include "remote_control.h"
 #include "CAN_receive.h"
 #include "detect_task.h"
 #include "INS_task.h"
-#include <stdio.h>
-
-extern uint8_t rx_buffer[];
+//#include "chassis_power_control.h"
 
 #define rc_deadband_limit(input, output, dealine)        \
     {                                                    \
@@ -42,6 +40,7 @@ extern uint8_t rx_buffer[];
             (output) = 0;                                \
         }                                                \
     }
+
 
 /**
   * @brief          "chassis_move" valiable initialization, include pid initialization, remote control data point initialization, 3508 chassis motors
@@ -144,10 +143,10 @@ void chassis_task(void const *pvParameters)
     chassis_init(&chassis_move);
     //make sure all chassis motor is online,
     //判断底盘电机是否都在线
-//    while (toe_is_error(CHASSIS_MOTOR1_TOE) || toe_is_error(CHASSIS_MOTOR2_TOE) || toe_is_error(CHASSIS_MOTOR3_TOE) || toe_is_error(CHASSIS_MOTOR4_TOE) || toe_is_error(DBUS_TOE))
-//    {
-//        vTaskDelay(CHASSIS_CONTROL_TIME_MS);
-//    }
+    while (toe_is_error(CHASSIS_MOTOR1_TOE) || toe_is_error(CHASSIS_MOTOR2_TOE) || toe_is_error(CHASSIS_MOTOR3_TOE) || toe_is_error(CHASSIS_MOTOR4_TOE) || toe_is_error(DBUS_TOE))
+    {
+        vTaskDelay(CHASSIS_CONTROL_TIME_MS);
+    }
 
     while (1)
     {
@@ -166,29 +165,25 @@ void chassis_task(void const *pvParameters)
         //chassis control pid calculate
         //底盘控制PID计算
         chassis_control_loop(&chassis_move);
-				
 
         //make sure  one motor is online at least, so that the control CAN message can be received
         //确保至少一个电机在线， 这样CAN控制包可以被接收到
-//        if (!(toe_is_error(CHASSIS_MOTOR1_TOE) && toe_is_error(CHASSIS_MOTOR2_TOE) && toe_is_error(CHASSIS_MOTOR3_TOE) && toe_is_error(CHASSIS_MOTOR4_TOE)))
-//        {
+        if (!(toe_is_error(CHASSIS_MOTOR1_TOE) && toe_is_error(CHASSIS_MOTOR2_TOE) && toe_is_error(CHASSIS_MOTOR3_TOE) && toe_is_error(CHASSIS_MOTOR4_TOE)))
+        {
             //when remote control is offline, chassis motor should receive zero current. 
             //当遥控器掉线的时候，发送给底盘电机零电流.
-            if (0)//(toe_is_error(DBUS_TOE))
+            if (toe_is_error(DBUS_TOE))
             {
                 CAN_cmd_chassis(0, 0, 0, 0);
             }
-            else //if(chassis_move.chassis_RC->rc.s[1] == 1)
+            else
             {
                 //send control current
                 //发送控制电流
                 CAN_cmd_chassis(chassis_move.motor_chassis[0].give_current, chassis_move.motor_chassis[1].give_current,
                                 chassis_move.motor_chassis[2].give_current, chassis_move.motor_chassis[3].give_current);
             }
-						
-//						else if(chassis_move.chassis_RC->rc.s[1] == 2)
-//							CAN_cmd_chassis_reset_ID();
-//        }
+        }
         //os delay
         //系统延时
         vTaskDelay(CHASSIS_CONTROL_TIME_MS);
@@ -240,8 +235,8 @@ static void chassis_init(chassis_move_t *chassis_move_init)
     chassis_move_init->chassis_INS_angle = get_INS_angle_point();
     //get gimbal motor data point
     //获取云台电机数据指针
-//    chassis_move_init->chassis_yaw_motor = get_yaw_motor_point();
-//    chassis_move_init->chassis_pitch_motor = get_pitch_motor_point();
+    chassis_move_init->chassis_yaw_motor = get_yaw_motor_point();
+    chassis_move_init->chassis_pitch_motor = get_pitch_motor_point();
     
     //get chassis motor data point,  initialize motor speed PID
     //获取底盘电机数据指针，初始化PID 
@@ -370,8 +365,8 @@ static void chassis_feedback_update(chassis_move_t *chassis_move_update)
 
     //calculate chassis euler angle, if chassis add a new gyro sensor,please change this code
     //计算底盘姿态角度, 如果底盘上有陀螺仪请更改这部分代码
-    chassis_move_update->chassis_yaw = rad_format(*(chassis_move_update->chassis_INS_angle + INS_YAW_ADDRESS_OFFSET));       // - chassis_move_update->chassis_yaw_motor->relative_angle);
-    chassis_move_update->chassis_pitch = rad_format(*(chassis_move_update->chassis_INS_angle + INS_PITCH_ADDRESS_OFFSET));   //- chassis_move_update->chassis_pitch_motor->relative_angle);
+    chassis_move_update->chassis_yaw = rad_format(*(chassis_move_update->chassis_INS_angle + INS_YAW_ADDRESS_OFFSET) - chassis_move_update->chassis_yaw_motor->relative_angle);
+    chassis_move_update->chassis_pitch = rad_format(*(chassis_move_update->chassis_INS_angle + INS_PITCH_ADDRESS_OFFSET) - chassis_move_update->chassis_pitch_motor->relative_angle);
     chassis_move_update->chassis_roll = *(chassis_move_update->chassis_INS_angle + INS_ROLL_ADDRESS_OFFSET);
 }
 /**
@@ -473,21 +468,19 @@ static void chassis_set_contorl(chassis_move_t *chassis_move_control)
     //跟随云台模式
     if (chassis_move_control->chassis_mode == CHASSIS_VECTOR_FOLLOW_GIMBAL_YAW)
     {
-//        fp32 sin_yaw = 0.0f, cos_yaw = 0.0f;
+        fp32 sin_yaw = 0.0f, cos_yaw = 0.0f;
         //rotate chassis direction, make sure vertial direction follow gimbal 
         //旋转控制底盘速度方向，保证前进方向是云台方向，有利于运动平稳
-//        sin_yaw = arm_sin_f32(-chassis_move_control->chassis_yaw_motor->relative_angle);
-//        cos_yaw = arm_cos_f32(-chassis_move_control->chassis_yaw_motor->relative_angle);
-//        chassis_move_control->vx_set = cos_yaw * vx_set + sin_yaw * vy_set;
-//        chassis_move_control->vy_set = -sin_yaw * vx_set + cos_yaw * vy_set;
-        chassis_move_control->vx_set = vx_set;
-        chassis_move_control->vy_set = vy_set;
+        sin_yaw = arm_sin_f32(-chassis_move_control->chassis_yaw_motor->relative_angle);
+        cos_yaw = arm_cos_f32(-chassis_move_control->chassis_yaw_motor->relative_angle);
+        chassis_move_control->vx_set = cos_yaw * vx_set + sin_yaw * vy_set;
+        chassis_move_control->vy_set = -sin_yaw * vx_set + cos_yaw * vy_set;
         //set control relative angle  set-point
         //设置控制相对云台角度
         chassis_move_control->chassis_relative_angle_set = rad_format(angle_set);
         //calculate ratation speed
         //计算旋转PID角速度
-//        chassis_move_control->wz_set = -PID_calc(&chassis_move_control->chassis_angle_pid, chassis_move_control->chassis_yaw_motor->relative_angle, chassis_move_control->chassis_relative_angle_set);
+        chassis_move_control->wz_set = -PID_calc(&chassis_move_control->chassis_angle_pid, chassis_move_control->chassis_yaw_motor->relative_angle, chassis_move_control->chassis_relative_angle_set);
         //speed limit
         //速度限幅
         chassis_move_control->vx_set = fp32_constrain(chassis_move_control->vx_set, chassis_move_control->vx_min_speed, chassis_move_control->vx_max_speed);
@@ -618,6 +611,9 @@ static void chassis_control_loop(chassis_move_t *chassis_move_control_loop)
         PID_calc(&chassis_move_control_loop->motor_speed_pid[i], chassis_move_control_loop->motor_chassis[i].speed, chassis_move_control_loop->motor_chassis[i].speed_set);
     }
 
+
+    //功率控制
+//    chassis_power_control(chassis_move_control_loop);
 
 
     //赋值电流值
