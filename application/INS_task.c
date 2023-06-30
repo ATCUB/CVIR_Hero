@@ -176,16 +176,16 @@ fp32 INS_angle_system[3] = {0.0f, 0.0f, 0.0f};      //euler angle, unit rad.Å·À­
 
 void INS_task(void const *pvParameters)
 {
-    //wait a time
-    osDelay(INS_TASK_INIT_TIME);
-    while(BMI088_init())
-    {
-        osDelay(100);
-    }
-    while(ist8310_init())
-    {
-        osDelay(100);
-    }
+		//wait a time
+		osDelay(INS_TASK_INIT_TIME);
+		while(BMI088_init())
+		{
+				osDelay(100);
+		}
+		while(ist8310_init())
+		{
+				osDelay(100);
+		}
 
     BMI088_read(bmi088_real_data.gyro, bmi088_real_data.accel, &bmi088_real_data.temp);
     //rotate and zero drift 
