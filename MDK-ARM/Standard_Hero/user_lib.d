@@ -1,7 +1,7 @@
 .\standard_hero\user_lib.o: ..\components\user_lib.c
 .\standard_hero\user_lib.o: ..\components\user_lib.h
-.\standard_hero\user_lib.o: ..\application\struct_typedef.h
-.\standard_hero\user_lib.o: ..\components\Include\arm_math.h
+.\standard_hero\user_lib.o: ../application/struct_typedef.h
+.\standard_hero\user_lib.o: ../components/Include/arm_math.h
 .\standard_hero\user_lib.o: ../Drivers/CMSIS/Include/core_cm4.h
 .\standard_hero\user_lib.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 .\standard_hero\user_lib.o: ../Drivers/CMSIS/Include/cmsis_version.h

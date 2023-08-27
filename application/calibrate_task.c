@@ -424,12 +424,14 @@ static void RC_cmd_to_calibrate(void)
     {
         //two rockers set to  \../, hold for 2 seconds,
         //两个摇杆打成 \../,保持2s
+				//下内八
         rc_cmd_time++;
     }
     else if (calibrate_RC->rc.ch[0] > RC_CALI_VALUE_HOLE && calibrate_RC->rc.ch[1] > RC_CALI_VALUE_HOLE && calibrate_RC->rc.ch[2] < -RC_CALI_VALUE_HOLE && calibrate_RC->rc.ch[3] > RC_CALI_VALUE_HOLE && switch_is_down(calibrate_RC->rc.s[0]) && switch_is_down(calibrate_RC->rc.s[1]) && rc_action_flag != 0)
     {
         //two rockers set '\/', hold for 2 seconds
         //两个摇杆打成'\/',保持2s
+				//上外八
         rc_cmd_time++;
         rc_action_flag = GIMBAL_FLAG;
     }
@@ -437,6 +439,7 @@ static void RC_cmd_to_calibrate(void)
     {
         //two rocker set to ./\., hold for 2 seconds
         //两个摇杆打成./\.,保持2s
+				//下外八
         rc_cmd_time++;
         rc_action_flag = GYRO_FLAG;
     }
@@ -444,6 +447,7 @@ static void RC_cmd_to_calibrate(void)
     {
         //two rocker set to /''\, hold for 2 seconds
         //两个摇杆打成/''\,保持2s
+				//上内八
         rc_cmd_time++;
         rc_action_flag = CHASSIS_FLAG;
     }

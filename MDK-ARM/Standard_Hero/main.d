@@ -35,8 +35,8 @@
 .\standard_hero\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
 .\standard_hero\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 .\standard_hero\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
-.\standard_hero\main.o: ..\application\message_usart.h
-.\standard_hero\main.o: ..\application\struct_typedef.h
+.\standard_hero\main.o: ../application/message_usart.h
+.\standard_hero\main.o: ../application/struct_typedef.h
 .\standard_hero\main.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 .\standard_hero\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.h
 .\standard_hero\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
@@ -59,8 +59,8 @@
 .\standard_hero\main.o: ../Inc/tim.h
 .\standard_hero\main.o: ../Inc/usart.h
 .\standard_hero\main.o: ../Inc/gpio.h
-.\standard_hero\main.o: ..\bsp\boards\bsp_can.h
-.\standard_hero\main.o: ..\application\remote_control.h
-.\standard_hero\main.o: ..\bsp\boards\bsp_rc.h
-.\standard_hero\main.o: ..\application\calibrate_task.h
-.\standard_hero\main.o: ..\bsp\boards\bsp_imu_pwm.h
+.\standard_hero\main.o: ../bsp/boards/bsp_can.h
+.\standard_hero\main.o: ../application/remote_control.h
+.\standard_hero\main.o: ../bsp/boards/bsp_rc.h
+.\standard_hero\main.o: ../application/calibrate_task.h
+.\standard_hero\main.o: ../bsp/boards/bsp_imu_pwm.h

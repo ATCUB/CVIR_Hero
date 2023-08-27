@@ -3,10 +3,10 @@
 .\standard_hero\chassis_task.o: ..\application\struct_typedef.h
 .\standard_hero\chassis_task.o: ..\application\CAN_receive.h
 .\standard_hero\chassis_task.o: ..\application\gimbal_task.h
-.\standard_hero\chassis_task.o: ..\controller\pid.h
+.\standard_hero\chassis_task.o: ../controller/pid.h
 .\standard_hero\chassis_task.o: ..\application\remote_control.h
-.\standard_hero\chassis_task.o: ..\bsp\boards\bsp_rc.h
-.\standard_hero\chassis_task.o: ..\components\user_lib.h
+.\standard_hero\chassis_task.o: ../bsp/boards/bsp_rc.h
+.\standard_hero\chassis_task.o: ../components/user_lib.h
 .\standard_hero\chassis_task.o: ..\application\chassis_behaviour.h
 .\standard_hero\chassis_task.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.h
 .\standard_hero\chassis_task.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
@@ -24,7 +24,7 @@
 .\standard_hero\chassis_task.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h
 .\standard_hero\chassis_task.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h
 .\standard_hero\chassis_task.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h
-.\standard_hero\chassis_task.o: ..\components\Include\arm_math.h
+.\standard_hero\chassis_task.o: ../components/Include/arm_math.h
 .\standard_hero\chassis_task.o: ../Drivers/CMSIS/Include/core_cm4.h
 .\standard_hero\chassis_task.o: ../Drivers/CMSIS/Include/cmsis_version.h
 .\standard_hero\chassis_task.o: ../Drivers/CMSIS/Include/cmsis_compiler.h

@@ -37,7 +37,7 @@
 .\standard_hero\detect_task.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
 .\standard_hero\detect_task.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 .\standard_hero\detect_task.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
-.\standard_hero\detect_task.o: ..\application\message_usart.h
+.\standard_hero\detect_task.o: ../application/message_usart.h
 .\standard_hero\detect_task.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 .\standard_hero\detect_task.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.h
 .\standard_hero\detect_task.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h

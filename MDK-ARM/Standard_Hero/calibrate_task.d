@@ -18,9 +18,9 @@
 .\standard_hero\calibrate_task.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h
 .\standard_hero\calibrate_task.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h
 .\standard_hero\calibrate_task.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h
-.\standard_hero\calibrate_task.o: ..\bsp\boards\bsp_buzzer.h
-.\standard_hero\calibrate_task.o: ..\bsp\boards\bsp_flash.h
+.\standard_hero\calibrate_task.o: ../bsp/boards/bsp_buzzer.h
+.\standard_hero\calibrate_task.o: ../bsp/boards/bsp_flash.h
 .\standard_hero\calibrate_task.o: ..\application\can_receive.h
 .\standard_hero\calibrate_task.o: ..\application\remote_control.h
-.\standard_hero\calibrate_task.o: ..\bsp\boards\bsp_rc.h
+.\standard_hero\calibrate_task.o: ../bsp/boards/bsp_rc.h
 .\standard_hero\calibrate_task.o: ..\application\INS_task.h

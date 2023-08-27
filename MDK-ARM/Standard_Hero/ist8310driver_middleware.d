@@ -1,6 +1,6 @@
 .\standard_hero\ist8310driver_middleware.o: ..\components\device\ist8310driver_middleware.c
 .\standard_hero\ist8310driver_middleware.o: ..\components\device\ist8310driver_middleWare.h
-.\standard_hero\ist8310driver_middleware.o: ..\application\struct_typedef.h
+.\standard_hero\ist8310driver_middleware.o: ../application/struct_typedef.h
 .\standard_hero\ist8310driver_middleware.o: ../Inc/main.h
 .\standard_hero\ist8310driver_middleware.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h
 .\standard_hero\ist8310driver_middleware.o: ../Inc/stm32f4xx_hal_conf.h
@@ -37,5 +37,5 @@
 .\standard_hero\ist8310driver_middleware.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
 .\standard_hero\ist8310driver_middleware.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 .\standard_hero\ist8310driver_middleware.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
-.\standard_hero\ist8310driver_middleware.o: ..\application\message_usart.h
+.\standard_hero\ist8310driver_middleware.o: ../application/message_usart.h
 .\standard_hero\ist8310driver_middleware.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h

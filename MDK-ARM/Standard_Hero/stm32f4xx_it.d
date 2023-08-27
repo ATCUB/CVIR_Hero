@@ -35,8 +35,8 @@
 .\standard_hero\stm32f4xx_it.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
 .\standard_hero\stm32f4xx_it.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 .\standard_hero\stm32f4xx_it.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
-.\standard_hero\stm32f4xx_it.o: ..\application\message_usart.h
-.\standard_hero\stm32f4xx_it.o: ..\application\struct_typedef.h
+.\standard_hero\stm32f4xx_it.o: ../application/message_usart.h
+.\standard_hero\stm32f4xx_it.o: ../application/struct_typedef.h
 .\standard_hero\stm32f4xx_it.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 .\standard_hero\stm32f4xx_it.o: ../Inc/stm32f4xx_it.h
 .\standard_hero\stm32f4xx_it.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h

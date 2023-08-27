@@ -1,7 +1,7 @@
 .\standard_hero\ahrs_middleware.o: ..\components\AHRS_middleware.c
 .\standard_hero\ahrs_middleware.o: ..\components\AHRS_MiddleWare.h
 .\standard_hero\ahrs_middleware.o: ..\components\AHRS.h
-.\standard_hero\ahrs_middleware.o: ..\components\Include\arm_math.h
+.\standard_hero\ahrs_middleware.o: ../components/Include/arm_math.h
 .\standard_hero\ahrs_middleware.o: ../Drivers/CMSIS/Include/core_cm4.h
 .\standard_hero\ahrs_middleware.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 .\standard_hero\ahrs_middleware.o: ../Drivers/CMSIS/Include/cmsis_version.h
@@ -41,6 +41,6 @@
 .\standard_hero\ahrs_middleware.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
 .\standard_hero\ahrs_middleware.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 .\standard_hero\ahrs_middleware.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
-.\standard_hero\ahrs_middleware.o: ..\application\message_usart.h
-.\standard_hero\ahrs_middleware.o: ..\application\struct_typedef.h
+.\standard_hero\ahrs_middleware.o: ../application/message_usart.h
+.\standard_hero\ahrs_middleware.o: ../application/struct_typedef.h
 .\standard_hero\ahrs_middleware.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
