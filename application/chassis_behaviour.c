@@ -211,7 +211,11 @@ static void chassis_no_follow_yaw_control(fp32 *vx_set, fp32 *vy_set, fp32 *wz_s
 
 static void chassis_open_set_control(fp32 *vx_set, fp32 *vy_set, fp32 *wz_set, chassis_move_t *chassis_move_rc_to_vector);
 
+/**
+	陀螺机动
+  */
 
+static void chassis_gyroscopic_maneuver_control(fp32 *vx_set, fp32 *vy_set, fp32 *wz_set, chassis_move_t *chassis_move_rc_to_vector);
 
 
 
@@ -245,7 +249,7 @@ void chassis_behaviour_mode_set(chassis_move_t *chassis_move_mode)
     {
         //can change to CHASSIS_ZERO_FORCE,CHASSIS_NO_MOVE,CHASSIS_INFANTRY_FOLLOW_GIMBAL_YAW,
         //CHASSIS_ENGINEER_FOLLOW_CHASSIS_YAW,CHASSIS_NO_FOLLOW_YAW,CHASSIS_OPEN
-        chassis_behaviour_mode = CHASSIS_NO_FOLLOW_YAW;
+        chassis_behaviour_mode = CHASSIS_INFANTRY_FOLLOW_GIMBAL_YAW;
     }
     else if (switch_is_down(chassis_move_mode->chassis_RC->rc.s[CHASSIS_MODE_CHANNEL]))
     {
@@ -253,7 +257,7 @@ void chassis_behaviour_mode_set(chassis_move_t *chassis_move_mode)
     }
     else if (switch_is_up(chassis_move_mode->chassis_RC->rc.s[CHASSIS_MODE_CHANNEL]))
     {
-        chassis_behaviour_mode = CHASSIS_ENGINEER_FOLLOW_CHASSIS_YAW;
+        chassis_behaviour_mode = CHASSIS_INFANTRY_GYRO_MANEUVER;
     }
 
     //when gimbal in some mode, such as init mode, chassis must's move
@@ -285,6 +289,10 @@ void chassis_behaviour_mode_set(chassis_move_t *chassis_move_mode)
     else if (chassis_behaviour_mode == CHASSIS_ENGINEER_FOLLOW_CHASSIS_YAW)
     {
         chassis_move_mode->chassis_mode = CHASSIS_VECTOR_FOLLOW_CHASSIS_YAW;
+    }
+    else if (chassis_behaviour_mode == CHASSIS_INFANTRY_GYRO_MANEUVER)
+    {
+        chassis_move_mode->chassis_mode = CHASSIS_CHASSIS_GYRO_MANEUVER;
     }
     else if (chassis_behaviour_mode == CHASSIS_NO_FOLLOW_YAW)
     {
@@ -338,6 +346,10 @@ void chassis_behaviour_control_set(fp32 *vx_set, fp32 *vy_set, fp32 *angle_set, 
     else if (chassis_behaviour_mode == CHASSIS_ENGINEER_FOLLOW_CHASSIS_YAW)
     {
         chassis_engineer_follow_chassis_yaw_control(vx_set, vy_set, angle_set, chassis_move_rc_to_vector);
+    }
+    else if (chassis_behaviour_mode == CHASSIS_INFANTRY_GYRO_MANEUVER)
+    {
+        chassis_gyroscopic_maneuver_control(vx_set, vy_set, angle_set, chassis_move_rc_to_vector);
     }
     else if (chassis_behaviour_mode == CHASSIS_NO_FOLLOW_YAW)
     {
@@ -530,6 +542,21 @@ static void chassis_engineer_follow_chassis_yaw_control(fp32 *vx_set, fp32 *vy_s
     chassis_rc_to_control_vector(vx_set, vy_set, chassis_move_rc_to_vector);
 
     *angle_set = rad_format(chassis_move_rc_to_vector->chassis_yaw_set - CHASSIS_ANGLE_Z_RC_SEN * chassis_move_rc_to_vector->chassis_RC->rc.ch[CHASSIS_WZ_CHANNEL]);
+}
+
+/**
+	陀螺机动
+  */
+
+static void chassis_gyroscopic_maneuver_control(fp32 *vx_set, fp32 *vy_set, fp32 *wz_set, chassis_move_t *chassis_move_rc_to_vector)
+{
+    if (vx_set == NULL || vy_set == NULL || wz_set == NULL || chassis_move_rc_to_vector == NULL)
+    {
+        return;
+    }
+
+    chassis_rc_to_control_vector(vx_set, vy_set, chassis_move_rc_to_vector);
+    *wz_set = -CHASSIS_WZ_RC_SEN * chassis_move_rc_to_vector->chassis_RC->rc.ch[CHASSIS_WZ_CHANNEL];
 }
 
 /**

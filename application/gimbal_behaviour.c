@@ -30,7 +30,7 @@ static void gimbal_relative_angle_control(fp32 *yaw, fp32 *pitch, gimbal_control
 static void gimbal_motionless_control(fp32 *yaw, fp32 *pitch, gimbal_control_t *gimbal_control_set);
 	
 //云台行为状态机
-static gimbal_behaviour_e gimbal_behaviour = GIMBAL_ZERO_FORCE;
+gimbal_behaviour_e gimbal_behaviour = GIMBAL_ZERO_FORCE;
 
 
 /**
@@ -216,19 +216,19 @@ static void gimbal_behavour_set(gimbal_control_t *gimbal_mode_set)
     {
         return;
     }
-//    //in cali mode, return
-//    //校准行为，return 不会设置其他的模式
-//    if (gimbal_behaviour == GIMBAL_CALI && gimbal_mode_set->gimbal_cali.step != GIMBAL_CALI_END_STEP)
-//    {
-//        return;
-//    }
-//    //if other operate make step change to start, means enter cali mode
-//    //如果外部使得校准步骤从0 变成 start，则进入校准模式
-//    if (gimbal_mode_set->gimbal_cali.step == GIMBAL_CALI_START_STEP && !toe_is_error(DBUS_TOE))
-//    {
-//        gimbal_behaviour = GIMBAL_CALI;
-//        return;
-//    }
+    //in cali mode, return
+    //校准行为，return 不会设置其他的模式
+    if (gimbal_behaviour == GIMBAL_CALI && gimbal_mode_set->gimbal_cali.step != GIMBAL_CALI_END_STEP)
+    {
+        return;
+    }
+    //if other operate make step change to start, means enter cali mode
+    //如果外部使得校准步骤从0 变成 start，则进入校准模式
+    if (gimbal_mode_set->gimbal_cali.step == GIMBAL_CALI_START_STEP)
+    {
+        gimbal_behaviour = GIMBAL_CALI;
+        return;
+    }
 
     //init mode, judge if gimbal is in middle place
     //初始化模式判断是否到达中值位置
@@ -393,7 +393,6 @@ static void gimbal_cali_control(fp32 *yaw, fp32 *pitch, gimbal_control_t *gimbal
         return;
     }
     static uint16_t cali_time = 0;
-
     if (gimbal_control_set->gimbal_cali.step == GIMBAL_CALI_PITCH_MAX_STEP)
     {
 

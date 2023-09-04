@@ -105,7 +105,7 @@
 #include "can_receive.h"
 #include "remote_control.h"
 #include "INS_task.h"
-
+#include "gimbal_task.h"
 
 //include head,gimbal,gyro,accel,mag. gyro,accel and mag have the same data struct. total 5(CALI_LIST_LENGHT) devices, need data lenght + 5 * 4 bytes(name[3]+cali)
 #define FLASH_WRITE_BUF_LENGHT  (sizeof(head_cali_t) + sizeof(gimbal_cali_t) + sizeof(imu_cali_t) * 3  + CALI_LIST_LENGHT * 4)
@@ -714,6 +714,32 @@ static bool_t cali_gyro_hook(uint32_t *cali, bool_t cmd)
   */
 static bool_t cali_gimbal_hook(uint32_t *cali, bool_t cmd)
 {
-
-    return 1;
+    gimbal_cali_t *local_cali_t = (gimbal_cali_t *)cali;
+    if (cmd == CALI_FUNC_CMD_INIT)
+    {
+        set_cali_gimbal_hook(local_cali_t->yaw_offset, local_cali_t->pitch_offset,
+                             local_cali_t->yaw_max_angle, local_cali_t->yaw_min_angle,
+                             local_cali_t->pitch_max_angle, local_cali_t->pitch_min_angle);
+        
+        return 0;
+    }
+    else if (cmd == CALI_FUNC_CMD_ON)
+    {
+        if (cmd_cali_gimbal_hook(&local_cali_t->yaw_offset, &local_cali_t->pitch_offset,
+                                 &local_cali_t->yaw_max_angle, &local_cali_t->yaw_min_angle,
+                                 &local_cali_t->pitch_max_angle, &local_cali_t->pitch_min_angle))
+        {
+            cali_buzzer_off();
+            
+            return 1;
+        }
+        else
+        {
+            gimbal_start_buzzer();
+            
+            return 0;
+        }
+    }
+    
+    return 0;
 }

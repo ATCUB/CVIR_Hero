@@ -112,6 +112,7 @@
 #define PITCH_ENCODE_SEN  0.01f
 
 #define GIMBAL_CONTROL_TIME 1
+#define GIMBAL_UPDATE_TIME 2
 
 //test mode, 0 close, 1 open
 //云台测试模式 宏定义 0 为不使用测试模式

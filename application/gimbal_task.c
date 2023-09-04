@@ -292,7 +292,7 @@ static void J_scope_gimbal_test(void);
 #endif
 
 
-
+extern gimbal_behaviour_e gimbal_behaviour;
 
 //gimbal control data
 //云台控制所有相关数据
@@ -328,7 +328,7 @@ void gimbal_task(void const *pvParameters)
     //判断电机是否都上线
     while (toe_is_error(YAW_GIMBAL_MOTOR_TOE) && toe_is_error(PITCH_GIMBAL_MOTOR_TOE))
     {
-        vTaskDelay(GIMBAL_CONTROL_TIME);
+        vTaskDelay(GIMBAL_UPDATE_TIME);
         gimbal_feedback_update(&gimbal_control);             //云台数据反馈
     }
 
@@ -356,9 +356,9 @@ void gimbal_task(void const *pvParameters)
         {
             if (toe_is_error(DBUS_TOE))
             {
-                CAN_cmd_gimbal(0, 0, 0, 0);
+                //CAN_cmd_gimbal(0, 0, 0, 0);
             }
-            else
+            else if (0)
             {
                 CAN_cmd_gimbal(yaw_can_set_current, pitch_can_set_current, shoot_can_set_current, 0);
             }
@@ -445,6 +445,7 @@ bool_t cmd_cali_gimbal_hook(uint16_t *yaw_offset, uint16_t *pitch_offset, fp32 *
         gimbal_control.gimbal_cali.min_pitch_ecd    = gimbal_control.gimbal_pitch_motor.gimbal_motor_measure->ecd;
         gimbal_control.gimbal_cali.min_yaw          = gimbal_control.gimbal_yaw_motor.absolute_angle;
         gimbal_control.gimbal_cali.min_yaw_ecd      = gimbal_control.gimbal_yaw_motor.gimbal_motor_measure->ecd;
+				gimbal_control.gimbal_yaw_motor.offset_ecd  = gimbal_control.gimbal_yaw_motor.gimbal_motor_measure->ecd;
         return 0;
     }
     else if (gimbal_control.gimbal_cali.step == GIMBAL_CALI_END_STEP)
@@ -454,13 +455,14 @@ bool_t cmd_cali_gimbal_hook(uint16_t *yaw_offset, uint16_t *pitch_offset, fp32 *
         (*min_yaw) += GIMBAL_CALI_REDUNDANT_ANGLE;
         (*max_pitch) -= GIMBAL_CALI_REDUNDANT_ANGLE;
         (*min_pitch) += GIMBAL_CALI_REDUNDANT_ANGLE;
-        gimbal_control.gimbal_yaw_motor.offset_ecd              = *yaw_offset;
+//        gimbal_control.gimbal_yaw_motor.offset_ecd              = *yaw_offset;
         gimbal_control.gimbal_yaw_motor.max_relative_angle      = *max_yaw;
         gimbal_control.gimbal_yaw_motor.min_relative_angle      = *min_yaw;
         gimbal_control.gimbal_pitch_motor.offset_ecd            = *pitch_offset;
         gimbal_control.gimbal_pitch_motor.max_relative_angle    = *max_pitch;
         gimbal_control.gimbal_pitch_motor.min_relative_angle    = *min_pitch;
         gimbal_control.gimbal_cali.step = 0;
+				gimbal_behaviour = GIMBAL_ZERO_FORCE;
         return 1;
     }
     else
@@ -739,6 +741,8 @@ static void gimbal_feedback_update(gimbal_control_t *feedback_update)
     feedback_update->gimbal_yaw_motor.motor_gyro = arm_cos_f32(feedback_update->gimbal_pitch_motor.relative_angle) * (*(feedback_update->gimbal_INT_gyro_point + INS_GYRO_Z_ADDRESS_OFFSET))
                                                         - arm_sin_f32(feedback_update->gimbal_pitch_motor.relative_angle) * (*(feedback_update->gimbal_INT_gyro_point + INS_GYRO_X_ADDRESS_OFFSET));
 }
+
+
 
 /**
   * @brief          calculate the relative angle between ecd and offset_ecd

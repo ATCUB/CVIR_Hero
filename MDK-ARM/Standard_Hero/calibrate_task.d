@@ -24,3 +24,5 @@
 .\standard_hero\calibrate_task.o: ..\application\remote_control.h
 .\standard_hero\calibrate_task.o: ../bsp/boards/bsp_rc.h
 .\standard_hero\calibrate_task.o: ..\application\INS_task.h
+.\standard_hero\calibrate_task.o: ..\application\gimbal_task.h
+.\standard_hero\calibrate_task.o: ../controller/pid.h

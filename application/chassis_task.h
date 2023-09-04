@@ -68,7 +68,7 @@
 #define MOTOR_SPEED_TO_CHASSIS_SPEED_WZ 0.25f
 
 
-#define MOTOR_DISTANCE_TO_CENTER 0.2f
+#define MOTOR_DISTANCE_TO_CENTER 0.1f
 
 //chassis task control time  2ms
 //底盘任务控制间隔 2ms
@@ -116,6 +116,11 @@
 //摇摆过程底盘运动最大角度(rad)
 #define SWING_MOVE_ANGLE 0.31415926535897932384626433832795f
 
+//小陀螺运动速度
+#define GYRO_MANEUVER_SPEED 12.0f
+#define GYRO_MANEUVER_MIN_TRIGER_SPEED 3.0f
+#define GYRO_MANEUVER_MIN_CANCEL_SPEED 2.0f
+#define GYRO_MANEUVER_ACTIVE_TIME 2000
 //chassis motor speed PID
 //底盘电机速度环PID
 #define M3505_MOTOR_SPEED_PID_KP 15000.0f
@@ -126,11 +131,11 @@
 
 //chassis follow angle PID
 //底盘旋转跟随PID
-#define CHASSIS_FOLLOW_GIMBAL_PID_KP 40.0f
+#define CHASSIS_FOLLOW_GIMBAL_PID_KP 25.0f
 #define CHASSIS_FOLLOW_GIMBAL_PID_KI 0.0f
-#define CHASSIS_FOLLOW_GIMBAL_PID_KD 0.0f
-#define CHASSIS_FOLLOW_GIMBAL_PID_MAX_OUT 6.0f
-#define CHASSIS_FOLLOW_GIMBAL_PID_MAX_IOUT 0.2f
+#define CHASSIS_FOLLOW_GIMBAL_PID_KD 5.0f
+#define CHASSIS_FOLLOW_GIMBAL_PID_MAX_OUT 20.0f
+#define CHASSIS_FOLLOW_GIMBAL_PID_MAX_IOUT 0.0f
 
 typedef enum
 {
@@ -138,7 +143,7 @@ typedef enum
   CHASSIS_VECTOR_FOLLOW_CHASSIS_YAW,  //chassis will have yaw angle(chassis_yaw) close-looped control.底盘有底盘角度控制闭环
   CHASSIS_VECTOR_NO_FOLLOW_YAW,       //chassis will have rotation speed control. 底盘有旋转速度控制
   CHASSIS_VECTOR_RAW,                 //control-current will be sent to CAN bus derectly.
-
+	CHASSIS_CHASSIS_GYRO_MANEUVER,
 } chassis_mode_e;
 
 typedef struct
